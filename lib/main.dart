@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'pages/home_page.dart';
-import 'package:expense_tracker/theme/theme.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
