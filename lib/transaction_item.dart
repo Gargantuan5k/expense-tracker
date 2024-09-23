@@ -1,7 +1,13 @@
+import 'package:expense_tracker/transaction_model.dart';
 import 'package:flutter/material.dart';
 
 class TransactionItem extends StatelessWidget {
-  const TransactionItem({super.key});
+  final TransactionModel transactionModel;
+
+  const TransactionItem({
+    super.key,
+    required this.transactionModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -10,9 +16,9 @@ class TransactionItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "September 17, 2024",
-            style: TextStyle(
+          Text(
+            transactionModel.date.toString(),
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
@@ -38,14 +44,72 @@ class TransactionItem extends StatelessWidget {
                             child: const Text('OK'),
                           ),
                         ],
-                        content: SizedBox(
-                          height: 400,
+                        content: const SizedBox(
+                          height: 200,
                           width: 350,
                           child: Column(
                             children: [
-                              Row(), // Tag
-                              Row(), // Amount
-                              Row(), // Description
+                              Row(
+                                children: [
+                                  Text(
+                                    'Tag: Lorem Tag', // TODO
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10), // Tag
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 230,
+                                    child: Text(
+                                      'Rs. 3000000000000', // TODO
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.red, // TODO
+                                      ),
+                                      maxLines: 10000,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ), // Amount
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 230,
+                                    child: Text(
+                                      'ipsum dolor sit amet consectetur adipiscing elit description', // TODO
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.blueGrey,
+                                      ),
+                                      maxLines: 10000,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 230,
+                                    child: Text(
+                                      '21 Sept. 2024', // TODO
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                      maxLines: 10000,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ), // Description
                             ],
                           ),
                         ),
@@ -77,12 +141,12 @@ class TransactionItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 11),
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Lorem Tag",
-                          style: TextStyle(
+                          transactionModel.tag,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
@@ -90,9 +154,9 @@ class TransactionItem extends StatelessWidget {
                         SizedBox(
                           width: 200,
                           child: Text(
-                            "ipsum dolor sit amet consectetur adipiscing elit description",
+                            transactionModel.description,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.blueGrey,
                             ),
                           ),
@@ -100,15 +164,15 @@ class TransactionItem extends StatelessWidget {
                       ],
                     ),
                     const Spacer(),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(right: 15.0),
                       child: Column(
                         children: [
                           SizedBox(
                             width: 85,
                             child: Text(
-                              "₹ 3000000000000",
-                              style: TextStyle(
+                              transactionModel.amount.toString(),
+                              style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 20,
                                 overflow: TextOverflow.ellipsis,

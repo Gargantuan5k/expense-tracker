@@ -23,9 +23,11 @@ class _HomePageState extends State<HomePage> {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
   final dateController = TextEditingController();
+  final tagController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
     String monthDropdownValue = 'January';
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> {
         amountController: amountController,
         descriptionController: descriptionController,
         dateController: dateController,
+        tagController: tagController,
       ),
       appBar: AppBar(
         title: const Text("Expense Tracker"),
@@ -44,7 +47,9 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(
               Icons.new_label,
             ),
-            onPressed: () => {},
+            onPressed: () {
+              setState(() {});
+            },
           ),
           IconButton(
             icon: const Icon(
@@ -126,7 +131,15 @@ class _HomePageState extends State<HomePage> {
               child: ListView.builder(
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return TransactionItem();
+                  return TransactionItem(
+                    transactionModel: TransactionModel(
+                      description: items[index].description,
+                      amount: items[index].amount,
+                      tag: items[index].tag,
+                      date: items[index].date,
+                      isIncome: items[index].isIncome,
+                    ),
+                  );
                 },
               ),
             )
@@ -136,6 +149,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+const List<String> tagList = <String>[
+  'Food',
+  'Bills',
+  'School',
+  'Miscellaneous',
+  'Salary',
+];
 
 const List<String> monthList = <String>[
   'January',
@@ -151,6 +172,42 @@ const List<String> monthList = <String>[
   'November',
   'December'
 ];
+
+class TagDropdown extends StatefulWidget {
+  // final TextEditingController tagController;
+
+  const TagDropdown({
+    super.key,
+    // required this.tagController,
+  });
+
+  @override
+  State<TagDropdown> createState() => _TagDropdownState();
+}
+
+class _TagDropdownState extends State<TagDropdown> {
+  String tagDropdownValue = tagList.first;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownMenu<String>(
+      // controller: ,
+      initialSelection: tagDropdownValue,
+      onSelected: (String? value) {
+        setState(() {
+          tagDropdownValue = value!;
+        });
+      },
+      dropdownMenuEntries:
+          tagList.map<DropdownMenuEntry<String>>((String value) {
+        return DropdownMenuEntry<String>(
+          value: value,
+          label: value,
+        );
+      }).toList(),
+    );
+  }
+}
 
 class MonthDropdown extends StatefulWidget {
   const MonthDropdown({super.key});
@@ -196,20 +253,26 @@ List items = [
   ),
 ];
 
-class NewEntryFAB extends StatelessWidget {
-  final TextEditingController amountController;
-  final TextEditingController descriptionController;
-  final TextEditingController dateController;
+class NewEntryFAB extends StatefulWidget {
+  const NewEntryFAB({
+    super.key,
+    required TextEditingController amountController,
+    required TextEditingController descriptionController,
+    required TextEditingController dateController,
+    required TextEditingController tagController,
+  });
+
+  @override
+  State<NewEntryFAB> createState() => _NewEntryFABState();
+}
+
+class _NewEntryFABState extends State<NewEntryFAB> {
+  final amountController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final dateController = TextEditingController();
+  final tagController = TextEditingController();
   DateTime? pickedDate;
   String currentOption = incomeExpenseOp[0];
-
-  NewEntryFAB({
-    super.key,
-    required this.amountController,
-    required this.descriptionController,
-    required this.dateController,
-    // this.pickedDate,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -224,14 +287,31 @@ class NewEntryFAB extends StatelessWidget {
                 title: const Text('Add Transaction'),
                 actions: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      int convertedAmount = int.parse(amountController.text);
+                      final TransactionModel transactionModel =
+                          TransactionModel(
+                        description: descriptionController.text,
+                        amount: convertedAmount,
+                        tag: tagController.text,
+                        date: pickedDate!,
+                        isIncome: false,
+                      );
+                      items.add(
+                        transactionModel,
+                      );
+                      Navigator.pop(context);
+                      setState(() {});
+                    },
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     child: const Text('ADD'),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
@@ -244,7 +324,7 @@ class NewEntryFAB extends StatelessWidget {
                   child: Column(
                     children: [
                       Row(
-                        children: [
+                        children: <Widget>[
                           RadioMenuButton(
                             value: incomeExpenseOp[0],
                             groupValue: currentOption,
@@ -317,14 +397,20 @@ class NewEntryFAB extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.only(
-                      //     left: 8.0,
-                      //     right: 8.0,
-                      //     bottom: 8.0,
-                      //   ),
-                      //   child: ,
-                      // )
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          left: 8.0,
+                          right: 8.0,
+                          bottom: 8.0,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 8.0,
+                            right: 8.0,
+                          ),
+                          child: TagDropdown(),
+                        ),
+                      )
                     ],
                   ),
                 ),

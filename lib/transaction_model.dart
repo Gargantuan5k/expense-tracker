@@ -5,10 +5,11 @@ class TransactionModel {
   final DateTime date;
   final bool isIncome;
 
-  TransactionModel(
-      {required this.description,
-      required this.amount,
-      required this.tag,
-      required this.date,
-      required this.isIncome});
+  TransactionModel({
+    required this.description,
+    required this.amount,
+    required this.tag,
+    required this.date,
+    required this.isIncome,
+  });
 }
